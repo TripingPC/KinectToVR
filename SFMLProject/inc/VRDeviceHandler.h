@@ -470,7 +470,7 @@ private:
             data.deviceName = "Virtual Hips";
             data.serial = "SERIAL_HIPS";
             data.deviceId = virtualHipsLocalId;
-            data.customModelName = "vr_controller_vive_1_5";
+            data.customModelName = "vr_tracker_vive_1_0";
 
             return data;
         }
@@ -489,7 +489,7 @@ private:
         data.deviceName = "SteamVR ID: " + std::to_string(localID) + " " + modelName;
         data.serial = serial;
         data.deviceId = localID;
-        data.customModelName = "vr_controller_vive_1_5";
+        data.customModelName = "vr_tracker_vive_1_0";
         return data;
     }
     void getVRStringProperty(const uint32_t &openvrID, vr::ETrackedDeviceProperty strProperty, std::string &string)

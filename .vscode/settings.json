@@ -1,2 +1,8 @@
 {
+    "files.associations": {
+        "sstream": "cpp",
+        "memory": "cpp",
+        "xmemory": "cpp",
+        "*.ipp": "cpp"
+    }
 }

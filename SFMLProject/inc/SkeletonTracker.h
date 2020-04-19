@@ -92,7 +92,7 @@ private:
         data.deviceName = "KID: " + std::to_string(localID) + " " + KVR::KinectJointName[localID];
         data.deviceId = kinectJointGIDs[localID];
         data.serial = "KINECT_JOINT_" + std::to_string(localID);
-        data.customModelName = "vr_controller_vive_1_5";
+        data.customModelName = "vr_tracker_vive_1_0";
         data.positionTrackingOption = KVR::JointPositionTrackingOption::Skeleton;
         data.rotationTrackingOption = KVR::JointRotationTrackingOption::Skeleton;
         

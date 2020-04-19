@@ -243,7 +243,7 @@ namespace KVR {
             }
             pose.deviceIsConnected = true;
 
-            /*
+            
             // PSEUDO 360 TRACKING
             // if in fzone
             // do nothing
@@ -316,7 +316,7 @@ namespace KVR {
                     break;
                 }
             }
-            */
+            
 
             pose.qRotation = jointRotation;
 
@@ -371,7 +371,7 @@ namespace KVR {
         KVR::KinectJoint joint0 = KVR::KinectJointType::INVALID;
         KVR::KinectJoint joint1 = KVR::KinectJointType::INVALID;
 
-        std::string defaultModelName{ "vr_controller_vive_1_5" };
+        std::string defaultModelName{ "vr_tracker_vive_1_0" };
         std::string customModelName{ defaultModelName }; // Set by the device handler in the input data
 
         bool invisible = false;

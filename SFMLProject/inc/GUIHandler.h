@@ -100,11 +100,12 @@ public:
         setRequisitions();
 
         mainNotebook->AppendPage(mainGUIBox, sfg::Label::Create("KinectToVR"));
-        mainNotebook->AppendPage(advancedTrackerBox, sfg::Label::Create("Adv. Trackers"));
-        mainNotebook->AppendPage(calibrationBox, sfg::Label::Create("Calibration"));
-        mainNotebook->AppendPage(trackingMethodBox, sfg::Label::Create("Tracking Method"));
+        // mainNotebook->AppendPage(advancedTrackerBox, sfg::Label::Create("Adv. Trackers"));
+        mainNotebook->AppendPage(calibrationBox, sfg::Label::Create("Manual Calibration"));
+        // mainNotebook->AppendPage(trackingMethodBox, sfg::Label::Create("Tracking Method"));
         mainNotebook->AppendPage(virtualHipsBox, sfg::Label::Create("Virtual Hips"));
-        
+        mainNotebook->AppendPage(advancedTrackerBox, sfg::Label::Create("Adv. Trackers"));
+        mainNotebook->AppendPage(trackingMethodBox, sfg::Label::Create("Tracking Method"));
         
 
         guiWindow->Add(mainNotebook);
@@ -701,11 +702,13 @@ void loadK2VRIntoBindingsMenu(vr::IVRSystem * & m_VRSystem) {
     // Only scene apps currently actually load into the Bindings menu
     // So, this momentarily opens the vrsystem as a scene, and closes it
     // Which actually allows the menu to stay open, while still functioning as normal
+    // . . .
+    // SIKE 2018 SHARKY, STEAMVR NOW ALLOWS OVERLAYS
     do {
         vr::EVRInitError eError = vr::VRInitError_None;
         vr::VR_Shutdown();
         LOG(INFO) << "(Workaround/Hack) Loading K2VR into bindings menu...";
-        m_VRSystem = vr::VR_Init(&eError, vr::VRApplication_Scene);
+        m_VRSystem = vr::VR_Init(&eError, vr::VRApplication_Overlay);
         Sleep(100); // Necessary because of SteamVR timing occasionally being too quick to change the scenes
         vr::VR_Shutdown();
         m_VRSystem = vr::VR_Init(&eError, vr::VRApplication_Background);
@@ -952,8 +955,8 @@ void setLineWrapping() {
     InferredLabel->SetLineWrap(true);
     InferredLabel->SetRequisition(sf::Vector2f(600.f, 20.f));
 
-    InstructionsLabel->SetLineWrap(true);
-    InstructionsLabel->SetRequisition(sf::Vector2f(600.f, 50.f));
+    // InstructionsLabel->SetLineWrap(true);
+    // InstructionsLabel->SetRequisition(sf::Vector2f(600.f, 50.f));
 
     CalibrationSettingsLabel->SetLineWrap(true);
     CalibrationSettingsLabel->SetRequisition(sf::Vector2f(600.f, 20.f));
@@ -972,9 +975,8 @@ void packElementsIntoMainBox() {
     mainGUIBox->Pack(reconKinectButton);
     mainGUIBox->Pack(TrackerInitButton);
     mainGUIBox->Pack(TrackerLastInitButton);
-    mainGUIBox->Pack(InstructionsLabel);
+    // mainGUIBox->Pack(InstructionsLabel);
 
-    setHipScaleBox();
     mainGUIBox->Pack(ShowSkeletonButton);
 
     mainGUIBox->Pack(EnableGamepadButton);
@@ -983,9 +985,11 @@ void packElementsIntoMainBox() {
 
     mainGUIBox->Pack(KinectRotLabel);
     mainGUIBox->Pack(KinectRotButton);
-
-    mainGUIBox->Pack(KinectPosLabel);
     mainGUIBox->Pack(KinectPosButton);
+    mainGUIBox->Pack(ActivateVRSceneTypeButton);
+    setHipScaleBox();
+    mainGUIBox->Pack(HipScaleBox);
+    // mainGUIBox->Pack(KinectPosLabel);
 
     
     mainGUIBox->Pack(InferredLabel);
@@ -994,12 +998,12 @@ void packElementsIntoMainBox() {
 }
 
 void setHipScaleBox() {
-    auto HipLabel = sfg::Label::Create("Vertical Hip Adjustment (metres)");
+    auto HipLabel = sfg::Label::Create("\nVertical Hip Adjustment (metres)\nChange the distance between the feet and waist trackers.");
     HipScale->SetDigits(3);
     
     HipScaleBox->Pack(HipLabel, false, false);
     HipScaleBox->Pack(HipScale);
-    mainGUIBox->Pack(HipScaleBox);
+    // mainGUIBox->Pack(HipScaleBox);
 }
 void packElementsIntoTrackingMethodBox() {
     //trackingMethodBox->Pack(InitiateColorTrackingButton);
@@ -1155,10 +1159,10 @@ void updateKinectStatusLabel(KinectHandlerBase& kinect) {
 
 
 void updateEmuStatusLabelError(vrinputemulator::vrinputemulator_connectionerror e) {
-    InputEmulatorStatusLabel->SetText("Input Emu Status: NOT Connected! Error " + std::to_string(e.errorcode) + " " + e.what() + "\n\n Is SteamVR open and InputEmulator installed?");
+    InputEmulatorStatusLabel->SetText("OpenVR-inputEmulator Status: NOT Connected! Error " + std::to_string(e.errorcode) + " " + e.what() + "\n\n Is SteamVR open and InputEmulator installed?");
 }
 void updateEmuStatusLabelSuccess() {
-    InputEmulatorStatusLabel->SetText("Input Emu Status: Success!");
+    InputEmulatorStatusLabel->SetText("OpenVR-inputEmulator Status: Success!");
 }
 
 void updateVRStatusLabel(vr::EVRInitError eError) {
@@ -1352,20 +1356,16 @@ private:
     sfg::Label::Ptr InputEmulatorStatusLabel = sfg::Label::Create();
 
     sfg::Button::Ptr reconKinectButton = sfg::Button::Create("Reconnect Kinect");
-    sfg::Button::Ptr TrackerInitButton = sfg::Button::Create("**Please be in VR before hitting me!** Initialise SteamVR Kinect Trackers - HIT ME");
+    sfg::Button::Ptr TrackerInitButton = sfg::Button::Create("Initialize Trackers - DONT PRESS ANYTHING FOR 5 SECONDS AFTER CLICKING");
     sfg::Button::Ptr TrackerLastInitButton = sfg::Button::Create("**Please be in VR before hitting me!** Spawn same trackers as last session");
 
-    sfg::Button::Ptr ShowSkeletonButton = sfg::CheckButton::Create("Show/Hide Skeleton Tracking: MAY CAUSE LAG IN TRACKERS");
+    sfg::Button::Ptr ShowSkeletonButton = sfg::CheckButton::Create("Show/Hide Skeleton Tracking (causes visible lag in VR trackers)");
 
-    //Zeroing
-    sfg::Label::Ptr KinectRotLabel = sfg::Label::Create("Calibrate the rotation of the Kinect sensor with the controller thumbsticks. Press the trigger to confirm.");
-    sfg::CheckButton::Ptr KinectRotButton = sfg::CheckButton::Create("Enable Kinect Rotation Calibration");
-
-
-    //Position Adjust
-    sfg::Label::Ptr KinectPosLabel = sfg::Label::Create("Calibrate the position of the Kinect sensor with the controller thumbsticks. Press the trigger to confirm.");
-    sfg::CheckButton::Ptr KinectPosButton = sfg::CheckButton::Create("Enable Kinect Position Calibration");
-
+    //Calibration
+    sfg::Label::Ptr KinectRotLabel = sfg::Label::Create("Tracker Calibration:\nEnable one checkbox at a time, and hide the SteamVR dashboard\nuse the thumbsticks/trackpads on your VR controllers to line up the trackers to your body.\nPress any of the triggers to confirm after each calibration step.");
+    sfg::CheckButton::Ptr KinectRotButton = sfg::CheckButton::Create("Calibrate Kinect Rotation");
+    sfg::CheckButton::Ptr KinectPosButton = sfg::CheckButton::Create("Calibrate Kinect Position");
+    sfg::Button::Ptr ActivateVRSceneTypeButton = sfg::Button::Create("Edit VR controller bindings for calibration.");
 
     // Controllers
     sfg::CheckButton::Ptr EnableGamepadButton = sfg::CheckButton::Create("Enable Gamepad Calibration Controls");
@@ -1373,7 +1373,7 @@ private:
     sfg::Button::Ptr ReconControllersButton = sfg::Button::Create("Reconnect VR Controllers");
 
 
-    sfg::Label::Ptr InferredLabel = sfg::Label::Create("Checking this stops the trackers if it's not absolutely 100% sure where they are. Leaving this disabled may cause better tracking in poorly lit environments, but at the cost of slight jerks aside sometimes.");
+    sfg::Label::Ptr InferredLabel = sfg::Label::Create("\nChecking this stops the trackers if it's not absolutely 100% sure where they are.\nLeaving this disabled may cause better tracking in poorly lit environments, but at the cost of slight jerks aside sometimes.");
     sfg::CheckButton::Ptr IgnoreInferredCheckButton = sfg::CheckButton::Create("Disable Raw Positional Tracking");
 
     sfg::Button::Ptr SetJointsToFootRotationButton = sfg::Button::Create("Enable (buggy) foot rotation for 360 Kinect");
@@ -1383,7 +1383,7 @@ private:
     sfg::Button::Ptr SetAllJointsRotFiltered = sfg::Button::Create("Enable rotation smoothing for ALL joints (Rotation smoothing is in development!!!)");
     sfg::Button::Ptr SetAllJointsRotHead = sfg::Button::Create("Use Head orientation for ALL joints - may fix issues with jumping trackers at cost of limited rotation");
 
-    sfg::Label::Ptr InstructionsLabel = sfg::Label::Create("Stand in front of the Kinect sensor.\n If the trackers don't update, then try crouching slightly until they move.\n\n Calibration: The arrow represents the position and rotation of the Kinect - match it as closely to real life as possible for the trackers to line up.\n\n The arrow pos/rot is set with the thumbsticks on the controllers, and confirmed with the trigger.");    //Blegh - There has to be a better way than this, maybe serialization?
+    // sfg::Label::Ptr InstructionsLabel = sfg::Label::Create("Stand in front of the Kinect sensor.\n If the trackers don't update, then try crouching slightly until they move.\n\n Calibration: The arrow represents the position and rotation of the Kinect - match it as closely to real life as possible for the trackers to line up.\n\n The arrow pos/rot is set with the thumbsticks on the controllers, and confirmed with the trigger.");    //Blegh - There has to be a better way than this, maybe serialization?
 
     sfg::Label::Ptr CalibrationSettingsLabel = sfg::Label::Create("These settings are here for manual entry, and saving until a proper configuration system is implemented.\nYou can use this to quickly calibrate if your Kinect is in the same place. \n(Rotation is in radians, and Pos should be in meters roughly)");
     sfg::Label::Ptr CalibrationPosLabel = sfg::Label::Create("Position x, y, z");
@@ -1398,7 +1398,7 @@ private:
 
     sfg::Button::Ptr CalibrationSaveButton = sfg::Button::Create("Save Calibration Values");
 
-    sfg::Button::Ptr ActivateVRSceneTypeButton = sfg::Button::Create("Show K2VR in the VR Bindings Menu!");
+    // sfg::Button::Ptr ActivateVRSceneTypeButton = sfg::Button::Create("Show K2VR in the VR Bindings Menu!");
 
     //Adv Trackers
     sfg::Button::Ptr calibrateOffsetButton = sfg::Button::Create("Calibrate VR Offset");
@@ -1461,13 +1461,13 @@ private:
         KinectStatusLabel->SetText("Kinect Status: ERROR KINECT NOT DETECTED");
     }
     void showPostTrackerInitUI(bool show = true) {
-        InstructionsLabel->Show(show);
+        // InstructionsLabel->Show(show);
         KinectRotLabel->Show(show);
         KinectRotButton->Show(show);
-        KinectPosLabel->Show(show);
+        // KinectPosLabel->Show(show);
         KinectPosButton->Show(show);
-        ReconControllersLabel->Show(show);
-        ReconControllersButton->Show(show);
+        // ReconControllersLabel->Show(show);
+        // ReconControllersButton->Show(show);
         InferredLabel->Show(show);
         IgnoreInferredCheckButton->Show(show);
         SetAllJointsRotUnfiltered->Show(show);

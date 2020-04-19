@@ -560,6 +560,15 @@ void spawnDefaultLowerBodyTrackers(vrinputemulator::VRInputEmulator & inputE, st
     spawnAndConnectTracker(inputE, v_trackers, KinectSettings::leftFootJointWithRotation, KinectSettings::leftFootJointWithoutRotation, KVR::KinectDeviceRole::LeftFoot);
     spawnAndConnectTracker(inputE, v_trackers, KinectSettings::rightFootJointWithRotation, KinectSettings::rightFootJointWithoutRotation, KVR::KinectDeviceRole::RightFoot);
     spawnAndConnectTracker(inputE, v_trackers, KVR::KinectJointType::SpineBase, KVR::KinectJointType::SpineMid, KVR::KinectDeviceRole::Hip);
+    Sleep(1000);
+    // parking
+    for (KinectTrackedDevice d : v_trackers) {
+        d.destroy();
+    }
+    Sleep(3000);
+    spawnAndConnectTracker(inputE, v_trackers, KinectSettings::leftFootJointWithRotation, KinectSettings::leftFootJointWithoutRotation, KVR::KinectDeviceRole::LeftFoot);
+    spawnAndConnectTracker(inputE, v_trackers, KinectSettings::rightFootJointWithRotation, KinectSettings::rightFootJointWithoutRotation, KVR::KinectDeviceRole::RightFoot);
+    spawnAndConnectTracker(inputE, v_trackers, KVR::KinectJointType::SpineBase, KVR::KinectJointType::SpineMid, KVR::KinectDeviceRole::Hip);
 }
 
 void spawnAndConnectKinectTracker(vrinputemulator::VRInputEmulator &inputE, std::vector<KVR::KinectTrackedDevice> &v_trackers)
