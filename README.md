@@ -1,12 +1,9 @@
-# DO NOT CLICK "Clone or download", that's the source code.
-# Get Started -> https://k2vr.tech
+# DO NOT CLICK "Clone or download", that's the source code. (Don't go to releases either)
+# **Get Started -> https://k2vr.tech**
 
 ### Where has the dev been?
-[->Watching this video shall explain all.<-](https://www.youtube.com/watch?v=6ZwE7Bl7hbc)
+[Explanation Video](https://youtu.be/6ZwE7Bl7hbc)
 
-## Getting Started - Users - https://triping.stream/kinect
-Take a look at the fantastic webpage TripingPC made for the project: https://triping.stream/kinect
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ## *The Official Discord is [here](https://discord.gg/Mu28W4N) (Australian timezone, though)*
 
 ## Supporting the Project
