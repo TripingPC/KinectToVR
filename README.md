@@ -1,8 +1,7 @@
-# KinectToVR
-An open-source hook for VRInputEmulator to enable foot and hip tracking with the Kinect.
-It currently allows for the hips, left foot and right foot to be tracked with the skeletal positions from the Kinect. Their positions are updated to a virtual tracker from the OpenVR Input Emulator in order to translate it into VR games.
+# DO NOT CLICK "Clone or download", that's the source code.
+## Get Started -> https://k2vr.tech
 
-# Where has the dev been?
+### Where has the dev been?
 [->Watching this video shall explain all.<-](https://www.youtube.com/watch?v=6ZwE7Bl7hbc)
 
 ## Getting Started - Users - https://triping.stream/kinect
